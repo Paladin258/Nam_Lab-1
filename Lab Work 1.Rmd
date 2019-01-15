@@ -1,0 +1,158 @@
+---
+title: "Lab 1 work"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+
+#   Create a small tibble
+```{r}
+x <- tibble (a=111,b=222)
+```
+
+#   Exercises The tibble Chapter 7
+#     Exercise 1:
+    Check if an object is a tibble (mtcars)
+```{r}
+   is.tibble(mtcars)
+```
+
+#     Exercise 2:
+    
+```{r}
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+
+
+df <- tibble (abc=1, xyz = 'a')
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+
+```
+
+  dataframe can extract partial matching variable while tibble variable has to be perfectly matched
+  
+#     Exercise 3:
+    
+```{r}
+var <- "abc"
+#to extract variable mpg:
+
+var$mpg
+```
+    
+#     Exercise 4:
+```{r}
+annoying <- tibble(
+  `1` = 1:10,
+  `2` = `1` * 2 + rnorm(length(`1`))
+)
+  #1.Extracting the variable called 1:
+annoying$`1`
+  #2.Plotting a scatterplot of 1 vs 2:
+  plot(annoying$`1`, annoying$`2`, main="annoying", 
+   xlab="1st variable", ylab="2nd variable", pch=19)
+  #3.Creating a new column called 3 which is 2 divided by 1:
+annoying  <- mutate(annoying , `3`= `2`/`1`)
+  #4.Renaming the columns to one, two and three:
+annoying <- rename(annoying, 'one' = `1`, 'two' = `2` , 'three'= `3`)
+```
+
+#     Exercise 5:
+    What does tibble::enframe() do? When might you use it?
+```{r}
+# Convert tibble into dataframe. It might be helpful when dealing with functions that only works with data frame
+```
+#     Exercise 6:
+    What option controls how many additional column names are printed at the footer of a tibble?
+```{r}
+#Use this command to control how many columns can be printed
+options(tibble.width_max = n, tibble.width_min = m)
+```
+    
+#   Exercises The tibble Chapter 8
+    
+#     Exercise 1:
+    Use this function:
+    read_delim(file, “|”)
+    
+#     Exercise 2:
+    They share all arguments in commmon:
+    
+read_csv2(file, col_names = TRUE, col_types = NULL,
+  locale = default_locale(), na = c("", "NA"), quoted_na = TRUE,
+  quote = "\"", comment = "", trim_ws = TRUE, skip = 0,
+  n_max = Inf, guess_max = min(1000, n_max),
+  progress = show_progress(), skip_empty_rows = TRUE)
+
+read_tsv(file, col_names = TRUE, col_types = NULL,
+  locale = default_locale(), na = c("", "NA"), quoted_na = TRUE,
+  quote = "\"", comment = "", trim_ws = TRUE, skip = 0,
+  n_max = Inf, guess_max = min(1000, n_max),
+  progress = show_progress(), skip_empty_rows = TRUE)
+  
+#     Exercise 4:
+    
+```{r}
+read_delim("x,y\n1,'a,b'", "," ,quote = "'")
+
+```
+  
+#   Exercises from Chapter 9
+
+#     Exercise 1.3:
+
+Tidy up the table2 so that it looks like table1
+```{r}
+table2 %>%
+    spread(key = type, value = count) %>% 
+    
+  ggplot(aes(year, cases)) + 
+  geom_line(aes(group = country), colour = "grey50") + 
+  geom_point(aes(colour = country))
+  
+```
+
+#     Exercise 2.2:
+This code below fails because the variables 1999 and 2000 do not have backticks, incorrect syntax
+
+```{r}
+table4a %>% 
+  gather(1999, 2000, key = "year", value = "cases")
+
+```
+
+
+#   Exercises from Chapter 10
+
+#   Exercise 3.1: 
+
+```{r}
+flights <- mutate(flights, `row.names` = (1:336776))
+  
+```
+
+#   Exercise 4.6:
+
+```{r}
+
+flights <- flights %>% 
+  left_join(airports, c("dest" = "faa"))
+flights <- flights %>%
+  rename(dest_lat = lat, dest_lon = lon)
+flights <- flights %>% 
+  left_join(airports, c("origin" = "faa"))
+flights <- flights %>%
+  rename(ori_lat = lat, ori_lon = lon)
+
+
+```
+
